@@ -90,13 +90,19 @@ data :
 $ kubectl apply -f ./kubernetes/<название файла>.yaml
 ```
 
-6. Создайте объект `Ingress`:
+6. Включите надстройку minikube ingress:
+
+```shell
+$ minikube addons enable ingress
+```
+
+8. Создайте объект `Ingress`:
 
 ```shell
 $ kubectl apply -f ./kubernetes/ingress-hosts.yaml
 ```
 
-7. Убедитесь, что IP-адрес установлен:
+8. Убедитесь, что IP-адрес установлен:
 
 ```shell
 $ kubectl get ingress
@@ -109,7 +115,7 @@ NAME             CLASS   HOSTS              ADDRESS          PORTS   AGE
 django-ingress   nginx   star-burger.test   192.168.59.107   80      30s
 ```
 
-8. Добавьте следующую строку в конец файла `hosts` на вашем компьютере (потребуется права администратора):
+9. Добавьте следующую строку в конец файла `hosts` на вашем компьютере (потребуется права администратора):
 
 ```shell
 <minikube ip> star-burger.test
@@ -121,7 +127,7 @@ django-ingress   nginx   star-burger.test   192.168.59.107   80      30s
 - Linux - `/etc/hosts`
 - Mac OS X - `/private/etc/hosts`
 
-9. Сайт доступен по адресу [http://star-burger.test](http://star-burger.test).
+10. Сайт доступен по адресу [http://star-burger.test](http://star-burger.test).
 
 При изменении переменных окружения в `ConfigMap` выполните следующие команды:
 
