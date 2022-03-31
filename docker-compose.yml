@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB-test_k8s}
       POSTGRES_USER: ${POSTGRES_USER-test_k8s}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-OwOtBep9Frut}
+    ports:
+      - "5432:5432"
 
   web:
     build: backend_main_django
