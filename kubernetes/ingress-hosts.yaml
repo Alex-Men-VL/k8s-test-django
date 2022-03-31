@@ -1,0 +1,64 @@
+apiVersion : apps/v1
+kind : Deployment
+metadata :
+  name : django
+  labels :
+    app : django-app
+spec :
+  selector :
+    matchLabels :
+      project : dj-app
+  template :
+    metadata :
+      labels :
+        project : dj-app
+    spec :
+      containers :
+        - name : django-app
+          image : docker.io/app/django_app:v1
+          imagePullPolicy: IfNotPresent
+          envFrom :
+            - configMapRef :
+                name : django-config
+          ports :
+            - containerPort : 80
+
+---
+
+apiVersion : v1
+kind : Service
+metadata :
+  name : django
+  labels :
+    env : prod
+spec :
+  selector :
+    project : dj-app
+  ports :
+    - name : django-listener
+      port : 8888
+      targetPort : 80
+      protocol : TCP
+  type : ClusterIP
+
+---
+
+apiVersion : networking.k8s.io/v1
+kind : Ingress
+metadata :
+  name : django-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec :
+  rules :
+    - host : star-burger.test
+      http :
+        paths :
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: django
+                port:
+                  number: 80

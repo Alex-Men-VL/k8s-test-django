@@ -51,25 +51,25 @@ CoreDNS is running at https://192.168.59.100:8443/api/v1/namespaces/kube-system/
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'
 ```
 
-Запустите СУБД с помощью Docker Compose:
+1. Запустите СУБД с помощью Docker Compose:
 
 ```shell
 $ docker-compose run -d db
 ```
 
-Загрузите образ Django в кластер:
+2. Загрузите образ Django в кластер:
 
 ```shell
 $ minikube image load <имя образа с тегом>
 ```
 
-Проверьте, что образ загрузился:
+3. Проверьте, что образ загрузился:
 
 ```shell
 $ minikube image ls
 ```
 
-Создайте файл в папке `kubernetes` с разрешением `.yaml` со следующим содержимым:
+4. Создайте файл в папке `kubernetes` с разрешением `.yaml` со следующим содержимым:
 
 ```yaml
 apiVersion : v1
@@ -84,33 +84,44 @@ data :
   ALLOWED_HOSTS : 'IP вашего minikube (можно узнать командой minikube ip)'
 ```
 
-Создайте `ConfigMap`:
+5. Создайте `ConfigMap`:
 
 ```shell
 $ kubectl apply -f ./kubernetes/<название файла>.yaml
 ```
 
-Создайте `Deployment`:
+6. Создайте объект `Ingress`:
 
 ```shell
-$ kubectl apply -f ./kubernetes/deployment-1.yaml
+$ kubectl apply -f ./kubernetes/ingress-hosts.yaml
 ```
 
-Создайте `Service`:
+7. Убедитесь, что IP-адрес установлен:
 
 ```shell
-$ kubectl apply -f ./kubernetes/service-1.yaml
+$ kubectl get ingress
 ```
 
-Проверьте статус созданного сервиса:
+Вы должны увидеть IPv4-адрес в столбце `ADDRESS`:
 
 ```shell
-$ kubectl get svc
-NAME             TYPE           CLUSTER-IP                 EXTERNAL-IP   PORT(S)          AGE
-django-service   LoadBalancer   <Внутренний IP кластера>   <pending>     8888:<PORT>/TCP   2h
+NAME             CLASS   HOSTS              ADDRESS          PORTS   AGE
+django-ingress   nginx   star-burger.test   192.168.59.107   80      30s
 ```
 
-Зайдите на сайте по следующему адресу `http://<IP вашего minikube>:<PORT из столбца PORT(S) из прошлого вывода>/`
+8. Добавьте следующую строку в конец файла `hosts` на вашем компьютере (потребуется права администратора):
+
+```shell
+<minikube ip> star-burger.test
+```
+
+Путь к файлу `hosts`:
+
+- Windows10 - `C:\Windows\System32\drivers\etc\hosts`
+- Linux - `/etc/hosts`
+- Mac OS X - `/private/etc/hosts`
+
+9. Сайт доступен по адресу [http://star-burger.test](http://star-burger.test).
 
 При изменении переменных окружения в `ConfigMap` выполните следующие команды:
 
