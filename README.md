@@ -165,3 +165,28 @@ $ kubectl apply -f kubernetes/job-django-migrate.yaml
 ```shell
 $ kubectl delete job django-migrate-job
 ```
+
+### Развернуть PostgreSQL в кластере
+
+1. Установите `helm`. [Инструкция](https://helm.sh/docs/intro/install/).
+2. Выполните следующие команды для добавления необходимого чарта и его установки:
+
+```shell
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm install <NAME> bitnami/postgresql
+```
+
+3. Следуя выведенной инструкции, подключитесь к базе данных через кластер.
+4. Создайте новую таблицу и пользователя:
+
+```postgresql
+CREATE DATABASE yourdbname;
+CREATE USER youruser WITH ENCRYPTED PASSWORD 'yourpass';
+GRANT ALL PRIVILEGES ON DATABASE yourdbname TO youruser;
+```
+
+5. Измените следующую строку в манифесте для `ConfigMap`:
+
+```shell
+DATABASE_URL : 'postgres://youruser:yourpass@<NAME из 2-го пункта>-postgresql:5432/yourdbname'
+```
