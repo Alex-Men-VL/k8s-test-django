@@ -15,9 +15,7 @@ spec:
           - name: django-clearsessions-job
             image: docker.io/app/django_app:v1
             imagePullPolicy: IfNotPresent
-            command:
-            - ./manage.py
-            - clearsessions
+            command: ["python", "manage.py", "clearsessions"]
             envFrom:
               - configMapRef:
                   name: django-config

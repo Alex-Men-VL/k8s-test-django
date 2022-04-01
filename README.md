@@ -147,3 +147,21 @@ $ kubectl apply -f kubernetes/cronjob-django-clearsessions.yaml
 ```shell
 $ kubectl create job --from=cronjob/django-clearsessions-cron django-clearsessions-job
 ```
+
+Затем удалите созданный job:
+
+```shell
+$ kubectl delete job django-clearsessions-job
+```
+
+12. Для запуска management-команды Django `migrate`:
+
+```shell
+$ kubectl apply -f kubernetes/job-django-migrate.yaml
+```
+
+Затем удалите созданный job:
+
+```shell
+$ kubectl delete job django-migrate-job
+```
