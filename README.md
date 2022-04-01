@@ -135,3 +135,15 @@ django-ingress   nginx   star-burger.test   192.168.59.107   80      30s
 $ kubectl apply -f ./kubernetes/django-config.yaml
 $ kubectl delete pods -l project=dj-app
 ```
+
+11. Запустите регулярное удаление сессий (опционально):
+
+```shell
+$ kubectl apply -f kubernetes/cronjob-django-clearsessions.yaml
+```
+
+Для принудительного удаления сессий:
+
+```shell
+$ kubectl create job --from=cronjob/django-clearsessions-cron django-clearsessions-job
+```
